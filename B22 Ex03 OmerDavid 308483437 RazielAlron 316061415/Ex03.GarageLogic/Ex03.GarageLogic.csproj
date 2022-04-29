@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6646B000-4616-4B1E-B630-ED2463CD2BA5}</ProjectGuid>
+    <ProjectGuid>{EEFFE19D-7D8F-43C9-854A-545F43954A10}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>Ex03.GarageLogic</RootNamespace>
     <AssemblyName>Ex03.GarageLogic</AssemblyName>
@@ -37,14 +37,6 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Customer.cs" />
-    <Compile Include="ElectricVehicle.cs" />
-    <Compile Include="FuelVehicle.cs" />
-    <Compile Include="Garage.cs" />
-    <Compile Include="Vehicle.cs" />
-    <Compile Include="Wheel.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{60F318D4-2A75-4CF9-BBEC-4EBE2791B9FC}</ProjectGuid>
+    <ProjectGuid>{A2E5EFC6-8FF0-48E3-BA80-5358B8480789}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>Ex03.ConsoleUI</RootNamespace>
     <AssemblyName>Ex03.ConsoleUI</AssemblyName>
@@ -34,12 +34,6 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Ex03.GarageLogic\Ex03.GarageLogic.csproj">
-      <Project>{6646b000-4616-4b1e-b630-ed2463cd2ba5}</Project>
-      <Name>Ex03.GarageLogic</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
