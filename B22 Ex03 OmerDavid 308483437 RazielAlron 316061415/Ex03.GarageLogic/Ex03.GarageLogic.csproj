@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{EEFFE19D-7D8F-43C9-854A-545F43954A10}</ProjectGuid>
+    <ProjectGuid>{DA9F4242-12E4-4E28-A01D-26257582F7E5}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>Ex03.GarageLogic</RootNamespace>
     <AssemblyName>Ex03.GarageLogic</AssemblyName>
@@ -37,6 +37,17 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Customer.cs" />
+    <Compile Include="ElectricCar.cs" />
+    <Compile Include="ElectricMotor.cs" />
+    <Compile Include="ElectricVehicle.cs" />
+    <Compile Include="FuelVehicle.cs" />
+    <Compile Include="Garage.cs" />
+    <Compile Include="ValueOutOfRangeException.cs" />
+    <Compile Include="Vehicle.cs" />
+    <Compile Include="Wheel.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
