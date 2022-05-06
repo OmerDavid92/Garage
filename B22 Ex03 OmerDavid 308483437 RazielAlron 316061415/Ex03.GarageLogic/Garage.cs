@@ -19,7 +19,7 @@ namespace Ex03.GarageLogic
 
         public List<Customer> m_GarageCustomers { get; } = new List<Customer>();
 
-        public List<string> GetChoosenVehicleTypeDataMembers (VehicleType i_VehicleType)
+        public static List<string> GetChoosenVehicleTypeDataMembers (VehicleType i_VehicleType)
         {
             List<string> dataMembers = null;
 
@@ -125,7 +125,7 @@ namespace Ex03.GarageLogic
             }
         }
 
-        public bool TryParseVehicle(VehicleType i_VehicleType, List<string> i_DataMembers, out Vehicle o_Vehicle)
+        public static bool TryParseVehicle(VehicleType i_VehicleType, List<string> i_DataMembers, out Vehicle o_Vehicle)
         {
             o_Vehicle = null;
             bool successfulParse = true;
@@ -152,9 +152,11 @@ namespace Ex03.GarageLogic
             return successfulParse;
         }
 
-            public void AddCustomer(string i_OwnerName, string i_phoneNumber, Vehicle i_Vehicle)
+        public void AddCustomer(string i_OwnerName, string i_phoneNumber, Vehicle i_Vehicle)
         {
-            Customer customer = new Customer(i_OwnerName, i_phoneNumber, Customer.CarStatus.InRepair, i_Vehicle);
+            Customer customer = new Customer(i_OwnerName, i_phoneNumber);
+
+            customer.m_Vehicle = i_Vehicle;
             m_GarageCustomers.Add(customer);
         }
 
