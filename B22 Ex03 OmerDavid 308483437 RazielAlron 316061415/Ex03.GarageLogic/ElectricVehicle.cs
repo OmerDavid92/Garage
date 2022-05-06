@@ -36,21 +36,22 @@ namespace Ex03.GarageLogic
             m_BatteryMaxHours = i_BatteryMaxHours;
         }
 
-        public virtual void Charge(float i_HoursToCharge)
-        {
-            if (m_BatteryHoursLeft + i_HoursToCharge > m_BatteryMaxHours)
-            {
-                //Throw exception
-            }
-
-            m_BatteryHoursLeft += i_HoursToCharge;
-        }
-
         public static List<string> GetDataMembers()
         {
             Vehicle.GetDataMembers().AddRange(m_DataMembers);
             return m_DataMembers;
         }
+
+        public void Recharge(float i_TimeToCharge)
+        {
+            if ((i_TimeToCharge + m_BatteryHoursLeft) > m_BatteryMaxHours)
+            {
+                //EXCEPTION
+            }
+
+            m_BatteryHoursLeft += i_TimeToCharge;
+        }
+
 
         public static bool TryParse(List<string> i_DataMembers, out ElectricVehicle o_ElectricVehicle)
         {

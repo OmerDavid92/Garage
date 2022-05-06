@@ -19,7 +19,7 @@ namespace Ex03.GarageLogic
 
         public List<Customer> m_GarageCustomers { get; } = new List<Customer>();
 
-        public static List<string> GetChoosenVehicleTypeDataMembers (VehicleType i_VehicleType)
+        public static List<string> GetChosenVehicleTypeDataMembers (VehicleType i_VehicleType)
         {
             List<string> dataMembers = null;
 
@@ -125,6 +125,39 @@ namespace Ex03.GarageLogic
             }
         }
 
+        public void RechargeVehicle(string i_LisenceNumber, float i_TimeToCharge)
+        {
+            ElectricVehicle electricVehicle = null;
+            foreach (Customer customer in m_GarageCustomers)
+            {
+                if (customer.m_Vehicle.m_LisenceNumber.Equals(i_LisenceNumber))
+                {
+                    electricVehicle = customer.m_Vehicle as ElectricVehicle;
+                    if (electricVehicle != null)
+                    {
+                        electricVehicle.Recharge(i_TimeToCharge);
+                    }
+
+                    break;
+                }
+            }
+        }
+
+        public Vehicle GetVehicleByLisenceNumber(string i_LisenceNumber)
+        {
+            Vehicle vehicle = null;
+            foreach (Customer customer in m_GarageCustomers)
+            {
+                if (customer.m_Vehicle.m_LisenceNumber.Equals(i_LisenceNumber))
+                {
+                    vehicle = customer.m_Vehicle;
+                    break;
+                }
+            }
+
+            return vehicle;
+        }
+
         public static bool TryParseVehicle(VehicleType i_VehicleType, List<string> i_DataMembers, out Vehicle o_Vehicle)
         {
             o_Vehicle = null;
@@ -150,14 +183,6 @@ namespace Ex03.GarageLogic
             }
 
             return successfulParse;
-        }
-
-        public void AddCustomer(string i_OwnerName, string i_phoneNumber, Vehicle i_Vehicle)
-        {
-            Customer customer = new Customer(i_OwnerName, i_phoneNumber);
-
-            customer.m_Vehicle = i_Vehicle;
-            m_GarageCustomers.Add(customer);
         }
 
     }
