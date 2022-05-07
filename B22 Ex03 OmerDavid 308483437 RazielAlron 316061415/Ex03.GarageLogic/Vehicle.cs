@@ -9,14 +9,14 @@ namespace Ex03.GarageLogic
     public class Vehicle
     {
         public string m_Model { get; }
-        public string m_LisenceNumber { get; }
+        public string m_LicenseNumber { get; }
         public float m_RemainingEnergySourcePrecentage { get; private set; }
         public List<Wheel> m_Wheels { get; }
+        public static List<string> m_DataMembers = new List<string> { "License Number", "Model", "Remaining Energy Source Precentage" };
 
-        public static List<string> m_DataMembers = new List<string> { "Model", "Lisence Number", "Remaining Energy Source Precentage" };
         public Vehicle(
             string i_Model,
-            string i_LisenceNumber,
+            string i_LicenseNumber,
             float i_RemainingEnergySourcePrecentage,
             string i_WheelManufacturer,
             float i_WheelMaxAirPressure,
@@ -24,7 +24,7 @@ namespace Ex03.GarageLogic
             int i_NumOfWheels)
         {
             m_Model = i_Model;
-            m_LisenceNumber = i_LisenceNumber;
+            m_LicenseNumber = i_LicenseNumber;
             m_RemainingEnergySourcePrecentage = i_RemainingEnergySourcePrecentage;
             Wheel wheel = new Wheel(i_WheelManufacturer, i_WheelMaxAirPressure, i_CurrentMaxAirPressure);
             m_Wheels = new List<Wheel>();
@@ -37,7 +37,11 @@ namespace Ex03.GarageLogic
 
         public static List<string> GetDataMembers()
         {
-            return m_DataMembers;
+            List<string> newList = m_DataMembers;
+            
+            newList.AddRange(Wheel.GetDataMembers());
+
+            return newList;
         }
 
         public void inflateMaxWheels()
@@ -52,8 +56,8 @@ namespace Ex03.GarageLogic
         {
             List<string> vehicleProperties = new List<string>();
             
+            vehicleProperties.Add($"License Number: {m_LicenseNumber}");
             vehicleProperties.Add($"Model: {m_Model}");
-            vehicleProperties.Add($"Lisence Number: {m_LisenceNumber}");
             vehicleProperties.Add($"Remaining Energy Source Precentage: {m_RemainingEnergySourcePrecentage}");
             vehicleProperties.AddRange(m_Wheels[0].GetWheelProperties());
             vehicleProperties.Add($"Number Of Wheels: {m_Wheels.Count}");
@@ -65,8 +69,8 @@ namespace Ex03.GarageLogic
         {
             o_Vehicle = null;
             Wheel o_Wheel = null;
-            string model = i_DataMembers[0];
-            string lisenceNumber = i_DataMembers[1];
+            string lisenceNumber = i_DataMembers[0];
+            string model = i_DataMembers[1];
             float remainingEnergySourcePrecentage = 0;
             bool successfulParse = true;
 

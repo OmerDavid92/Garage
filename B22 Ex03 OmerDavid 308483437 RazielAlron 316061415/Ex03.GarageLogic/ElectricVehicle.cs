@@ -38,8 +38,11 @@ namespace Ex03.GarageLogic
 
         public static List<string> GetDataMembers()
         {
-            Vehicle.GetDataMembers().AddRange(m_DataMembers);
-            return m_DataMembers;
+            List<string> newList = Vehicle.GetDataMembers();
+
+            newList.AddRange(m_DataMembers);
+
+            return newList;
         }
 
         public void Recharge(float i_TimeToCharge)
@@ -52,7 +55,7 @@ namespace Ex03.GarageLogic
             m_BatteryHoursLeft += i_TimeToCharge;
         }
 
-        public virtual List<string> GetVehicleProperties()
+        public override List<string> GetVehicleProperties()
         {
             List<string> vehicleProperties = new List<string>();
 
@@ -83,7 +86,7 @@ namespace Ex03.GarageLogic
                             m_BatteryMaxHours,
                             m_BatteryHoursLeft,
                             o_Vehicle.m_Model,
-                            o_Vehicle.m_LisenceNumber,
+                            o_Vehicle.m_LicenseNumber,
                             o_Vehicle.m_RemainingEnergySourcePrecentage,
                             o_Vehicle.m_Wheels[0].m_Manufacturer,
                             o_Vehicle.m_Wheels[0].m_MaxAirPressure,

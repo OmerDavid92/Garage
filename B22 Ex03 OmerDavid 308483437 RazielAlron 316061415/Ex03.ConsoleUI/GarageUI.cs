@@ -21,8 +21,6 @@
 
         private Garage m_Garage = new Garage();
 
-
-
         public GarageMainMenu GetMainMenuInput()
         {
             string userInput = string.Empty;
@@ -67,7 +65,7 @@
             bool successfulParse = false;
             int vehicleTypeEnumMaxValue = (int)Enum.GetValues(typeof(Garage.VehicleType)).Cast<Garage.VehicleType>().Max();
 
-            Console.WriteLine("Please enter vehicle type: ");
+            Console.WriteLine("Please enter vehicle type: 0 - fuel car / 1 - fuel motor / 2 - electric car / 3 - electric motor / 4 - truck");
             vehicleType = Console.ReadLine();
             successfulParse = int.TryParse(vehicleType, out enumSelection);
             
@@ -82,19 +80,18 @@
         }
 
         ///CHECK WTF HAPPANNING WITH EXCEPTIONS
-        private Vehicle getVehicle(Garage.VehicleType i_VehicleType)
+        private Vehicle getVehicle(List<string> i_VehicleDataMembers, Garage.VehicleType i_VehicleType)
         {
             Vehicle vehicle = null;
-            List<string> vehicleDataMembers = null;
 
-            vehicleDataMembers = GetVehicleDetailsFromUser(i_VehicleType);
-            vehicle = CreateVehicle(i_VehicleType, vehicleDataMembers);
+            GetVehicleDetailsFromUser(i_VehicleDataMembers, i_VehicleType);
+            vehicle = CreateVehicle(i_VehicleType, i_VehicleDataMembers);
 
-            while (vehicle != null)
+            while (vehicle == null)
             {
                 Console.WriteLine("Please enter valid vehicle details");
-                vehicleDataMembers = GetVehicleDetailsFromUser(i_VehicleType);
-                vehicle = CreateVehicle(i_VehicleType, vehicleDataMembers);
+                GetVehicleDetailsFromUser(i_VehicleDataMembers, i_VehicleType);
+                vehicle = CreateVehicle(i_VehicleType, i_VehicleDataMembers);
             }
 
             return vehicle;
@@ -105,13 +102,16 @@
             Vehicle vehicle = null;
             Garage.VehicleType vehicleType = 0;
             Customer customer = null;
+            List<string> dataMembersUserInput = new List<string>();
             string licenseNumber = GetLicenseNumber();
+
+            dataMembersUserInput.Add(licenseNumber);
 
             if (!m_Garage.CheckAndChangeVehicleStatusInGarage(licenseNumber))
             {
                 vehicleType = GetVehicleType();
                 customer = CreateCustomer();
-                customer.m_Vehicle = getVehicle(vehicleType);
+                customer.m_Vehicle = getVehicle(dataMembersUserInput, vehicleType);
                 m_Garage.m_GarageCustomers.Add(customer);
             }
             else
@@ -188,18 +188,26 @@
             int carStatus = GetCarStatusOrAllVehicles();
             
             vehiclesLicensesNumberByStatus = m_Garage.GetLisencePlatesByStatus(carStatus);
-            if (carStatus == -1)
+            if (vehiclesLicensesNumberByStatus.Count > 0)
             {
-                Console.WriteLine("Licenses Number of Vehicles in Garage:");
+                if (carStatus == -1)
+                {
+                    Console.WriteLine("Licenses Number of Vehicles in Garage:");
+                }
+                else
+                {
+                    Console.WriteLine("Licenses Number of Vehicles in Garage with status {0}:",
+                        (Customer.CarStatus) carStatus);
+                }
+
+                foreach (string licenseNumber in vehiclesLicensesNumberByStatus)
+                {
+                    Console.WriteLine(licenseNumber);
+                }
             }
             else
             {
-                Console.WriteLine("Licenses Number of Vehicles in Garage with status {0}", (Customer.CarStatus)carStatus);
-            }
-
-            foreach (string licenseNumber in vehiclesLicensesNumberByStatus)
-            {
-                Console.WriteLine(licenseNumber);
+                Console.WriteLine("No cars to display");
             }
         }
 
@@ -254,21 +262,44 @@
 
         public void Refuel()
         {
+            FuelVehicle.FuelType fuelType = 0;
+            float amountToFuel = 0f;
+            Vehicle currentVehicle = null;
             string licenseNumber = GetLicenseNumber();
-            FuelVehicle.FuelType fuelType = GetFuelType();
-            float amountToFuel = GetAmountToFuel();
 
-            m_Garage.RefuelVehicle(licenseNumber, fuelType, amountToFuel);
-            Console.WriteLine("Vehicle Refueled");
+            currentVehicle = m_Garage.GetVehicleByLisenceNumber(licenseNumber);
+
+            if (currentVehicle is FuelVehicle)
+            {
+                fuelType = GetFuelType();
+                amountToFuel = GetAmountToFuel();
+                m_Garage.RefuelVehicle(licenseNumber, fuelType, amountToFuel);
+                Console.WriteLine("Vehicle Refueled");
+            }
+            else
+            {
+                Console.WriteLine("Can't refuel an electric vehicle");
+            }
         }
 
         public void ReCharge()
         {
+            float amountToCharge = 0f;
+            Vehicle currentVehicle = null;
             string licenseNumber = GetLicenseNumber();
-            float amountToCharge = GetAmountToCharge();
 
-            m_Garage.RechargeVehicle(licenseNumber, amountToCharge);
-            Console.WriteLine("Vehicle Recharged");
+            currentVehicle = m_Garage.GetVehicleByLisenceNumber(licenseNumber);
+
+            if (currentVehicle is ElectricCar)
+            {
+                amountToCharge = GetAmountToCharge();
+                m_Garage.RechargeVehicle(licenseNumber, amountToCharge);
+                Console.WriteLine("Vehicle Recharged");
+            }
+            else
+            {
+                Console.WriteLine("Can't charge a fuel vehicle");
+            }
         }
 
         public void PrintVehicleProperties()
@@ -344,20 +375,20 @@
             return new Customer(ownerName, phoneNumber);
         }
 
-        public List<string> GetVehicleDetailsFromUser(Garage.VehicleType i_VehicleType)
+        public void GetVehicleDetailsFromUser(List<string> i_UserInputs, Garage.VehicleType i_VehicleType)
         {
             List<string> dataMembers = Garage.GetChosenVehicleTypeDataMembers(i_VehicleType);
-            List<string> userInputs = new List<string>();
 
             Console.WriteLine("--- Add Vehicle Menu ---");
 
             foreach (string member in dataMembers)
             {
-                Console.WriteLine("Please enter {0}:", member);
-                userInputs.Add(Console.ReadLine());
+                if (!member.Equals("License Number"))
+                {
+                    Console.WriteLine("Please enter {0}:", member);
+                    i_UserInputs.Add(Console.ReadLine());
+                }
             }
-
-            return userInputs;
         }
 
         public Vehicle CreateVehicle(Garage.VehicleType i_VehicleType, List<string> i_VehicleUserInput)

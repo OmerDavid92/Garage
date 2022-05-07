@@ -50,7 +50,7 @@ namespace Ex03.GarageLogic
             bool isVehicleExistInGarage = false;
             foreach (Customer costumer in m_GarageCustomers)
             {
-                if (i_LisenceNumber.Equals(costumer.m_Vehicle.m_LisenceNumber))
+                if (i_LisenceNumber.Equals(costumer.m_Vehicle.m_LicenseNumber))
                 {
                     isVehicleExistInGarage = true;
                 }
@@ -63,7 +63,7 @@ namespace Ex03.GarageLogic
         {
             foreach (Customer costumer in m_GarageCustomers)
             {
-                if (i_LisenceNumber.Equals(costumer.m_Vehicle.m_LisenceNumber))
+                if (i_LisenceNumber.Equals(costumer.m_Vehicle.m_LicenseNumber))
                 {
                     costumer.m_CarStatus = i_CarStatus;
                 }
@@ -88,7 +88,7 @@ namespace Ex03.GarageLogic
             {
                 if (i_CarStatus == -1 || customer.m_CarStatus == (Customer.CarStatus)i_CarStatus)
                 {
-                    lisencePlatesByStatus.Add(customer.m_Vehicle.m_LisenceNumber);
+                    lisencePlatesByStatus.Add(customer.m_Vehicle.m_LicenseNumber);
                 }
             }
 
@@ -99,7 +99,7 @@ namespace Ex03.GarageLogic
         {
             foreach (Customer customer in m_GarageCustomers)
             {
-                if (customer.m_Vehicle.m_LisenceNumber.Equals(i_LisenceNumber))
+                if (customer.m_Vehicle.m_LicenseNumber.Equals(i_LisenceNumber))
                 {
                     customer.m_Vehicle.inflateMaxWheels();
                     break;
@@ -112,7 +112,7 @@ namespace Ex03.GarageLogic
             FuelVehicle fuelVehicle = null;
             foreach (Customer customer in m_GarageCustomers)
             {
-                if (customer.m_Vehicle.m_LisenceNumber.Equals(i_LisenceNumber))
+                if (customer.m_Vehicle.m_LicenseNumber.Equals(i_LisenceNumber))
                 {
                     fuelVehicle = customer.m_Vehicle as FuelVehicle;
                     if (fuelVehicle != null)
@@ -130,7 +130,7 @@ namespace Ex03.GarageLogic
             ElectricVehicle electricVehicle = null;
             foreach (Customer customer in m_GarageCustomers)
             {
-                if (customer.m_Vehicle.m_LisenceNumber.Equals(i_LisenceNumber))
+                if (customer.m_Vehicle.m_LicenseNumber.Equals(i_LisenceNumber))
                 {
                     electricVehicle = customer.m_Vehicle as ElectricVehicle;
                     if (electricVehicle != null)
@@ -148,7 +148,7 @@ namespace Ex03.GarageLogic
             Vehicle vehicle = null;
             foreach (Customer customer in m_GarageCustomers)
             {
-                if (customer.m_Vehicle.m_LisenceNumber.Equals(i_LisenceNumber))
+                if (customer.m_Vehicle.m_LicenseNumber.Equals(i_LisenceNumber))
                 {
                     vehicle = customer.m_Vehicle;
                     break;

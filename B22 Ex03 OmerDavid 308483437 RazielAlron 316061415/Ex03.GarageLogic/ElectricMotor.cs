@@ -50,11 +50,14 @@ namespace Ex03.GarageLogic
 
         public static List<string> GetDataMembers()
         {
-            ElectricVehicle.GetDataMembers().AddRange(m_DataMembers);
-            return m_DataMembers;
+            List<string> newList = ElectricVehicle.GetDataMembers();
+            
+            newList.AddRange(m_DataMembers);
+
+            return newList;
         }
 
-        public virtual List<string> GetVehicleProperties()
+        public override List<string> GetVehicleProperties()
         {
             List<string> vehicleProperties = new List<string>();
 
@@ -65,7 +68,7 @@ namespace Ex03.GarageLogic
             return vehicleProperties;
         }
 
-        public static bool TryParse(List<string> i_DataMembers, out ElectricMotor o_ElectricMotor)
+        public static bool TryParse(List<string> i_DataMembers, out Vehicle o_ElectricMotor)
         {
             bool successfulParse = true;
             ElectricVehicle o_ElectricVehicle = null;
@@ -89,7 +92,7 @@ namespace Ex03.GarageLogic
                             o_ElectricVehicle.m_BatteryMaxHours,
                             o_ElectricVehicle.m_BatteryHoursLeft,
                             o_ElectricVehicle.m_Model,
-                            o_ElectricVehicle.m_LisenceNumber,
+                            o_ElectricVehicle.m_LicenseNumber,
                             o_ElectricVehicle.m_RemainingEnergySourcePrecentage,
                             o_ElectricVehicle.m_Wheels[0].m_Manufacturer,
                             o_ElectricVehicle.m_Wheels[0].m_MaxAirPressure,

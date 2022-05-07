@@ -21,7 +21,7 @@ namespace Ex03.GarageLogic
 
         private const int m_NumOfWheels = 4;
 
-        public static List<string> m_DataMembers = new List<string> { "Car Color", "Cargo Volume" };
+        public static List<string> m_DataMembers = new List<string> { "Car Color: 0 - Red / 1 - White / 2 - Green / 3 - Blue", "Cargo Volume" };
 
         public FuelCar(
             CarColor i_CarColor,
@@ -52,11 +52,14 @@ namespace Ex03.GarageLogic
 
         public static List<string> GetDataMembers()
         {
-            FuelVehicle.GetDataMembers().AddRange(m_DataMembers);
-            return m_DataMembers;
+            List<string> newList = FuelVehicle.GetDataMembers();
+            
+            newList.AddRange(m_DataMembers);
+
+            return newList;
         }
 
-        public virtual List<string> GetVehicleProperties()
+        public override List<string> GetVehicleProperties()
         {
             List<string> vehicleProperties = new List<string>();
 
@@ -67,7 +70,7 @@ namespace Ex03.GarageLogic
             return vehicleProperties;
         }
 
-        public static bool TryParse(List<string> i_DataMembers, out FuelCar o_FuelCarVehicle)
+        public static bool TryParse(List<string> i_DataMembers, out Vehicle o_FuelCarVehicle)
         {
             bool successfulParse = true;
             FuelVehicle o_FuelVehicle = null;
@@ -92,7 +95,7 @@ namespace Ex03.GarageLogic
                             o_FuelVehicle.m_CurrentFuelInLiters,
                             o_FuelVehicle.m_MaxFuelInLiters,
                             o_FuelVehicle.m_Model,
-                            o_FuelVehicle.m_LisenceNumber,
+                            o_FuelVehicle.m_LicenseNumber,
                             o_FuelVehicle.m_RemainingEnergySourcePrecentage,
                             o_FuelVehicle.m_Wheels[0].m_Manufacturer,
                             o_FuelVehicle.m_Wheels[0].m_MaxAirPressure,
