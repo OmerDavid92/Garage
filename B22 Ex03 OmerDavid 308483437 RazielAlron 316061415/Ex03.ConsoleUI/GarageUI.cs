@@ -119,6 +119,169 @@
                 Console.WriteLine("License Number is Already submitted, Status changed to 'In Repair'");
             }     
         }
+        public Customer.CarStatus GetCarStatus()
+        {
+            string carStatus = string.Empty;
+            int enumSelection = 0;
+            bool successfulParse = false;
+            int vehicleTypeEnumMaxValue = (int)Enum.GetValues(typeof(Customer.CarStatus)).Cast<Customer.CarStatus>().Max();
+
+            Console.WriteLine("Please enter car status: 0 - InRepair, 1 - Repared,  2- Paid");
+            carStatus = Console.ReadLine();
+            successfulParse = int.TryParse(carStatus, out enumSelection);
+
+            while (!(successfulParse && enumSelection >= 0 && enumSelection <= vehicleTypeEnumMaxValue))
+            {
+                Console.WriteLine("Wrong Input, Enter a number between 0-{0}", vehicleTypeEnumMaxValue);
+                carStatus = Console.ReadLine();
+                successfulParse = int.TryParse(carStatus, out enumSelection);
+            }
+
+            return (Customer.CarStatus)enumSelection;
+        }
+        
+        public FuelVehicle.FuelType GetFuelType()
+        {
+            string fuelType = string.Empty;
+            int enumSelection = 0;
+            bool successfulParse = false;
+            int fuelTypeEnumMaxValue = (int)Enum.GetValues(typeof(FuelVehicle.FuelType)).Cast<FuelVehicle.FuelType>().Max();
+
+            Console.WriteLine("Please enter car status: 0 - Soler, 1 - Octan95,  2 - Octan96, 3 - Octan98");
+            fuelType = Console.ReadLine();
+            successfulParse = int.TryParse(fuelType, out enumSelection);
+
+            while (!(successfulParse && enumSelection >= 0 && enumSelection <= fuelTypeEnumMaxValue))
+            {
+                Console.WriteLine("Wrong Input, Enter a number between 0-{0}", fuelTypeEnumMaxValue);
+                fuelType = Console.ReadLine();
+                successfulParse = int.TryParse(fuelType, out enumSelection);
+            }
+
+            return (FuelVehicle.FuelType)enumSelection;
+        }
+
+        public int GetCarStatusOrAllVehicles()
+        {
+            string carStatus = string.Empty;
+            int userSelection = 0;
+            bool successfulParse = false;
+            int vehicleTypeEnumMaxValue = (int)Enum.GetValues(typeof(Customer.CarStatus)).Cast<Customer.CarStatus>().Max();
+
+            Console.WriteLine("Please enter car status: 0 - InRepair, 1 - Repared,  2- Paid, -1 - All Vehicles");
+            carStatus = Console.ReadLine();
+            successfulParse = int.TryParse(carStatus, out userSelection);
+            
+            while (!(successfulParse && userSelection >= -1 && userSelection <= vehicleTypeEnumMaxValue))
+            {
+                Console.WriteLine("Wrong Input, Enter a number between -1-{0}", vehicleTypeEnumMaxValue);
+                carStatus = Console.ReadLine();
+                successfulParse = int.TryParse(carStatus, out userSelection);
+            }
+
+            return userSelection;
+        }
+
+        public void GetLicenseNumbersOfVehiclesInGarageByStatus()
+        {
+            List<string> vehiclesLicensesNumberByStatus;
+            int carStatus = GetCarStatusOrAllVehicles();
+            
+            vehiclesLicensesNumberByStatus = m_Garage.GetLisencePlatesByStatus(carStatus);
+            if (carStatus == -1)
+            {
+                Console.WriteLine("Licenses Number of Vehicles in Garage:");
+            }
+            else
+            {
+                Console.WriteLine("Licenses Number of Vehicles in Garage with status {0}", (Customer.CarStatus)carStatus);
+            }
+
+            foreach (string licenseNumber in vehiclesLicensesNumberByStatus)
+            {
+                Console.WriteLine(licenseNumber);
+            }
+        }
+
+        public void ChangeStatus()
+        {
+            string licenseNumber = GetLicenseNumber();
+            Customer.CarStatus carStatus = GetCarStatus();
+
+            m_Garage.ChangeVehicleStatusInGarage(licenseNumber, carStatus);
+            Console.WriteLine("Car status changed to {0}", carStatus);
+        }
+
+        public void InflateWheels()
+        {
+            string licenseNumber = GetLicenseNumber();
+
+            m_Garage.InflateMaxWheels(licenseNumber);
+            Console.WriteLine("The transInflation accured");
+        }
+
+        public float GetAmountToFuel()
+        {
+            string userInput = string.Empty;
+            bool successfulParse = false;
+            float amountToFuel = 0;
+
+            while (!(successfulParse && amountToFuel>=0))
+            {
+                Console.WriteLine("Please Enter Amount of fuel in Liters (Bigger than 0)");
+                userInput = Console.ReadLine();
+                successfulParse = float.TryParse(userInput, out amountToFuel);
+            }
+
+            return amountToFuel;
+        }
+
+        public float GetAmountToCharge()
+        {
+            string userInput = string.Empty;
+            bool successfulParse = false;
+            float amountToCharge = 0;
+
+            while (!(successfulParse && amountToCharge >= 0))
+            {
+                Console.WriteLine("Please Enter Amount of charge in hours (Bigger than 0)");
+                userInput = Console.ReadLine();
+                successfulParse = float.TryParse(userInput, out amountToCharge);
+            }
+
+            return amountToCharge;
+        }
+
+        public void Refuel()
+        {
+            string licenseNumber = GetLicenseNumber();
+            FuelVehicle.FuelType fuelType = GetFuelType();
+            float amountToFuel = GetAmountToFuel();
+
+            m_Garage.RefuelVehicle(licenseNumber, fuelType, amountToFuel);
+            Console.WriteLine("Vehicle Refueled");
+        }
+
+        public void ReCharge()
+        {
+            string licenseNumber = GetLicenseNumber();
+            float amountToCharge = GetAmountToCharge();
+
+            m_Garage.RechargeVehicle(licenseNumber, amountToCharge);
+            Console.WriteLine("Vehicle Recharged");
+        }
+
+        public void PrintVehicleProperties()
+        {
+            string licenseNumber = GetLicenseNumber();
+            Vehicle vehicle = m_Garage.GetVehicleByLisenceNumber(licenseNumber);
+            List<string> vehicleProperties = vehicle.GetVehicleProperties();
+            
+            foreach (string property in vehicleProperties)
+            {
+                Console.WriteLine(property);
+            }
+        }
 
         public void Start()
         {
@@ -133,22 +296,22 @@
                         AddVehicle();
                         break;
                     case GarageMainMenu.DisplayLicense:
-
+                        GetLicenseNumbersOfVehiclesInGarageByStatus();
                         break;
                     case GarageMainMenu.ChangeStatus:
-
+                        ChangeStatus();
                         break;
                     case GarageMainMenu.InflateWheels:
-
+                        InflateWheels();
                         break;
                     case GarageMainMenu.Refuel:
-
+                        Refuel();
                         break;
                     case GarageMainMenu.Recharge:
-
+                        ReCharge();
                         break;
                     case GarageMainMenu.DisplayVehicleDetails:
-
+                        PrintVehicleProperties();
                         break;
                 }
 

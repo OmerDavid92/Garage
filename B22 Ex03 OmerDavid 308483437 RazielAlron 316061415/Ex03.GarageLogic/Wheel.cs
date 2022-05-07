@@ -31,6 +31,17 @@ namespace Ex03.GarageLogic
             m_CurrentAirPressure = m_MaxAirPressure;
         }
 
+        public List<string> GetWheelProperties()
+        {
+            List<string> wheelProperties = new List<string>();
+
+            wheelProperties.Add($"Manufacturer: {m_Manufacturer}");
+            wheelProperties.Add($"Current Air Pressure: {m_CurrentAirPressure}");
+            wheelProperties.Add($"Max Air Pressure: {m_MaxAirPressure}");
+
+            return wheelProperties;
+        }
+
         public static bool TryParse(List<string> i_DataMembers, out Wheel o_Wheel)
         {
             o_Wheel = null;

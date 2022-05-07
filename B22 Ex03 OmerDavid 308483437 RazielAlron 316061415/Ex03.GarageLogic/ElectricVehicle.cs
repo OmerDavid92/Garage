@@ -8,7 +8,7 @@ namespace Ex03.GarageLogic
 {
     public class ElectricVehicle : Vehicle
     {
-        public float m_BatteryHoursLeft { get; }
+        public float m_BatteryHoursLeft { get; private set; }
 
         public float m_BatteryMaxHours { get; }
 
@@ -52,7 +52,16 @@ namespace Ex03.GarageLogic
             m_BatteryHoursLeft += i_TimeToCharge;
         }
 
+        public virtual List<string> GetVehicleProperties()
+        {
+            List<string> vehicleProperties = new List<string>();
 
+            vehicleProperties.AddRange(base.GetVehicleProperties());
+            vehicleProperties.Add($"Battery Hours Left: {m_BatteryHoursLeft}");
+            vehicleProperties.Add($"Battery Max Hours: {m_BatteryMaxHours}");
+
+            return vehicleProperties;
+        }
         public static bool TryParse(List<string> i_DataMembers, out ElectricVehicle o_ElectricVehicle)
         {
             bool successfulParse = true;

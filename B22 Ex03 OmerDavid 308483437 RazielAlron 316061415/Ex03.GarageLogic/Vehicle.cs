@@ -48,6 +48,19 @@ namespace Ex03.GarageLogic
             }
         }
 
+        public virtual List<string> GetVehicleProperties()
+        {
+            List<string> vehicleProperties = new List<string>();
+            
+            vehicleProperties.Add($"Model: {m_Model}");
+            vehicleProperties.Add($"Lisence Number: {m_LisenceNumber}");
+            vehicleProperties.Add($"Remaining Energy Source Precentage: {m_RemainingEnergySourcePrecentage}");
+            vehicleProperties.AddRange(m_Wheels[0].GetWheelProperties());
+            vehicleProperties.Add($"Number Of Wheels: {m_Wheels.Count}");
+
+            return vehicleProperties;
+        }
+
         public static bool TryParse(List<string> i_DataMembers, out Vehicle o_Vehicle)
         {
             o_Vehicle = null;

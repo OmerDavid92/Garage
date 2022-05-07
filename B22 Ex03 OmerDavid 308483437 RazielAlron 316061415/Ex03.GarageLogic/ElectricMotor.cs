@@ -54,6 +54,17 @@ namespace Ex03.GarageLogic
             return m_DataMembers;
         }
 
+        public virtual List<string> GetVehicleProperties()
+        {
+            List<string> vehicleProperties = new List<string>();
+
+            vehicleProperties.AddRange(base.GetVehicleProperties());
+            vehicleProperties.Add($"License Type: {m_LicenseType}");
+            vehicleProperties.Add($"Engine Capacity: {m_EngineCapacity}");
+
+            return vehicleProperties;
+        }
+
         public static bool TryParse(List<string> i_DataMembers, out ElectricMotor o_ElectricMotor)
         {
             bool successfulParse = true;

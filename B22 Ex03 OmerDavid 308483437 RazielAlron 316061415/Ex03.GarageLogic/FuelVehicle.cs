@@ -65,6 +65,17 @@ namespace Ex03.GarageLogic
             m_CurrentFuelInLiters += i_AmountToFuelInLiters;
         }
 
+        public virtual List<string> GetVehicleProperties()
+        {
+            List<string> vehicleProperties = new List<string>();
+
+            vehicleProperties.AddRange(base.GetVehicleProperties());
+            vehicleProperties.Add($"Fuel Type: {m_FuelType}");
+            vehicleProperties.Add($"Current Fuel In Liters: {m_CurrentFuelInLiters}");
+            vehicleProperties.Add($"Max Fuel In Liters: {m_MaxFuelInLiters}");
+
+            return vehicleProperties;
+        }
 
         public static bool TryParse(List<string> i_DataMembers, out FuelVehicle o_FuelVehicle)
         {
