@@ -23,7 +23,7 @@ namespace Ex03.GarageLogic
 
         public static List<string> GetDataMembers()
         {
-            return m_DataMembers;
+            return new List<string>(m_DataMembers);
         }
 
         public void InflateMax()
@@ -42,25 +42,26 @@ namespace Ex03.GarageLogic
             return wheelProperties;
         }
 
-        public static bool TryParse(List<string> i_DataMembers, out Wheel o_Wheel)
+        public static Wheel Parse(List<string> i_DataMembers)
         {
-            o_Wheel = null;
             string manufacturer = i_DataMembers[0];
             float maxAirPressure = 0;
             float currentAirPressure = 0;
-            bool SuccessfulParse = true;
+            bool successfulParse = true;
 
-            SuccessfulParse = float.TryParse(i_DataMembers[1], out maxAirPressure);
-            if (SuccessfulParse)
+            successfulParse = float.TryParse(i_DataMembers[1], out maxAirPressure);
+            if (!successfulParse)
             {
-                SuccessfulParse = float.TryParse(i_DataMembers[2], out currentAirPressure);
-                if (SuccessfulParse)
-                {
-                    o_Wheel = new Wheel(manufacturer, maxAirPressure, currentAirPressure);
-                }
+                throw new FormatException("Invalid max air pressure");
             }
 
-            return SuccessfulParse;
+            successfulParse = float.TryParse(i_DataMembers[2], out currentAirPressure);
+            if (!successfulParse)
+            {
+                throw new FormatException("Invalid current air pressure");
+            }
+
+            return new Wheel(manufacturer, maxAirPressure, currentAirPressure);
         }
     }
 }

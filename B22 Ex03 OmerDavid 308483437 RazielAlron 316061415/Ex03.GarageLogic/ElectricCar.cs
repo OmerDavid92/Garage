@@ -69,40 +69,38 @@ namespace Ex03.GarageLogic
             return vehicleProperties;
         }
 
-        public static bool TryParse(List<string> i_DataMembers, out Vehicle o_ElectricCar)
+        public static ElectricCar Parse(List<string> i_DataMembers)
         {
             bool successfulParse = true;
-            ElectricVehicle o_ElectricVehicle = null;
-            o_ElectricCar = null;
+            ElectricVehicle electricVehicle = null;
             int enumSelection = 0;
             int CarColorEnumMaxValue = (int)Enum.GetValues(typeof(CarColor)).Cast<CarColor>().Max();
             float cargoVolume = 0;
 
-            successfulParse = ElectricVehicle.TryParse(i_DataMembers.GetRange(0, 8), out o_ElectricVehicle);
-            if (successfulParse)
+            electricVehicle = ElectricVehicle.Parse(i_DataMembers.GetRange(0, 8));
+            successfulParse = int.TryParse(i_DataMembers[8], out enumSelection);
+            if (!successfulParse || CarColorEnumMaxValue < enumSelection || enumSelection < 0)
             {
-                successfulParse = int.TryParse(i_DataMembers[8], out enumSelection);
-                if (CarColorEnumMaxValue > enumSelection && enumSelection > 0 && successfulParse)
-                {
-                    successfulParse = float.TryParse(i_DataMembers[9], out cargoVolume);
-                    if (successfulParse)
-                    {
-                        o_ElectricCar = new ElectricCar(
-                            (CarColor)enumSelection,
-                            cargoVolume,
-                            o_ElectricVehicle.m_BatteryMaxHours,
-                            o_ElectricVehicle.m_BatteryHoursLeft,
-                            o_ElectricVehicle.m_Model,
-                            o_ElectricVehicle.m_LicenseNumber,
-                            o_ElectricVehicle.m_RemainingEnergySourcePrecentage,
-                            o_ElectricVehicle.m_Wheels[0].m_Manufacturer,
-                            o_ElectricVehicle.m_Wheels[0].m_MaxAirPressure,
-                            o_ElectricVehicle.m_Wheels[0].m_CurrentAirPressure);
-                    }
-                }
+                throw new FormatException("Invalid car color");
             }
 
-            return successfulParse;
+            successfulParse = float.TryParse(i_DataMembers[9], out cargoVolume);
+            if (!successfulParse)
+            {
+                throw new FormatException("Invalid cargo volume");
+            }
+
+            return new ElectricCar(
+                (CarColor)enumSelection,
+                cargoVolume,
+                electricVehicle.m_BatteryMaxHours,
+                electricVehicle.m_BatteryHoursLeft,
+                electricVehicle.m_Model,
+                electricVehicle.m_LicenseNumber,
+                electricVehicle.m_RemainingEnergySourcePrecentage,
+                electricVehicle.m_Wheels[0].m_Manufacturer,
+                electricVehicle.m_Wheels[0].m_MaxAirPressure,
+                electricVehicle.m_Wheels[0].m_CurrentAirPressure);
         }
     }
 }

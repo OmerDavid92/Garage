@@ -37,7 +37,7 @@ namespace Ex03.GarageLogic
 
         public static List<string> GetDataMembers()
         {
-            List<string> newList = m_DataMembers;
+            List<string> newList = new List<string>(m_DataMembers);
             
             newList.AddRange(Wheel.GetDataMembers());
 
@@ -65,32 +65,29 @@ namespace Ex03.GarageLogic
             return vehicleProperties;
         }
 
-        public static bool TryParse(List<string> i_DataMembers, out Vehicle o_Vehicle)
+        public static Vehicle Parse(List<string> i_DataMembers)
         {
-            o_Vehicle = null;
-            Wheel o_Wheel = null;
+            Wheel wheel = null;
             string lisenceNumber = i_DataMembers[0];
             string model = i_DataMembers[1];
             float remainingEnergySourcePrecentage = 0;
             bool successfulParse = true;
 
             successfulParse = float.TryParse(i_DataMembers[2], out remainingEnergySourcePrecentage);
-            if (successfulParse)
+            if (!successfulParse)
             {
-                successfulParse = Wheel.TryParse(i_DataMembers.GetRange(3, 3), out o_Wheel);
-                if (successfulParse)
-                {
-                    o_Vehicle = new Vehicle(model,
-                        lisenceNumber,
-                        remainingEnergySourcePrecentage,
-                        o_Wheel.m_Manufacturer,
-                        o_Wheel.m_MaxAirPressure,
-                        o_Wheel.m_CurrentAirPressure,
-                        1);
-                }
+                throw new FormatException("Invalid remaining energy source percentage");
             }
 
-            return successfulParse;
+            wheel = Wheel.Parse(i_DataMembers.GetRange(3, 3));
+
+            return new Vehicle(model,
+                    lisenceNumber,
+                    remainingEnergySourcePrecentage,
+                    wheel.m_Manufacturer,
+                    wheel.m_MaxAirPressure,
+                    wheel.m_CurrentAirPressure,
+                    1);
         }
         
     }

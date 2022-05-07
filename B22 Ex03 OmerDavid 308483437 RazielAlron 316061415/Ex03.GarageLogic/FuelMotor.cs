@@ -35,16 +35,17 @@ namespace Ex03.GarageLogic
             string i_WheelManufacturer,
             float i_WheelMaxAirPressure,
             float i_CurrentMaxAirPressure)
-            : base(i_FuelType,
-                  i_CurrentFuelInLiters,
-                  i_MaxFuelInLiters,
-                  i_Model,
-                  i_LisenceNumber,
-                  i_RemainingEnergySourcePrecentage,
-                  i_WheelManufacturer,
-                  i_WheelMaxAirPressure,
-                  i_CurrentMaxAirPressure,
-                  m_NumOfWheels)
+            : base(
+                i_FuelType,
+                i_CurrentFuelInLiters,
+                i_MaxFuelInLiters,
+                i_Model,
+                i_LisenceNumber,
+                i_RemainingEnergySourcePrecentage,
+                i_WheelManufacturer,
+                i_WheelMaxAirPressure,
+                i_CurrentMaxAirPressure,
+                m_NumOfWheels)
         {
             m_LicenseType = i_LicenseType;
             m_EngineCapacity = i_EngineCapacity;
@@ -70,42 +71,39 @@ namespace Ex03.GarageLogic
             return vehicleProperties;
         }
 
-        public static bool TryParse(List<string> i_DataMembers, out Vehicle o_FuelMotorVehicle)
+        public static FuelMotor Parse(List<string> i_DataMembers)
         {
             bool successfulParse = true;
-            FuelVehicle o_FuelVehicle = null;
-            o_FuelMotorVehicle = null;
+            FuelVehicle fuelVehicle = null;
             int enumSelection = 0;
             int CarColorEnumMaxValue = (int)Enum.GetValues(typeof(LicenseType)).Cast<LicenseType>().Max();
             int engineCapacity = 0;
 
-            successfulParse = FuelVehicle.TryParse(i_DataMembers.GetRange(0, 9), out o_FuelVehicle);
-            if (successfulParse)
+            fuelVehicle = FuelVehicle.Parse(i_DataMembers.GetRange(0, 9));
+            successfulParse = int.TryParse(i_DataMembers[9], out enumSelection);
+            if (!successfulParse || CarColorEnumMaxValue < enumSelection || enumSelection < 0)
             {
-                successfulParse = int.TryParse(i_DataMembers[9], out enumSelection);
-                if (CarColorEnumMaxValue > enumSelection && enumSelection > 0 && successfulParse)
-                {
-                    successfulParse = int.TryParse(i_DataMembers[10], out engineCapacity);
-                    if (successfulParse)
-                    {
-                        o_FuelMotorVehicle = new FuelMotor(
-                            (LicenseType)enumSelection,
-                            engineCapacity,
-                            o_FuelVehicle.m_FuelType,
-                            o_FuelVehicle.m_CurrentFuelInLiters,
-                            o_FuelVehicle.m_MaxFuelInLiters,
-                            o_FuelVehicle.m_Model,
-                            o_FuelVehicle.m_LicenseNumber,
-                            o_FuelVehicle.m_RemainingEnergySourcePrecentage,
-                            o_FuelVehicle.m_Wheels[0].m_Manufacturer,
-                            o_FuelVehicle.m_Wheels[0].m_MaxAirPressure,
-                            o_FuelVehicle.m_Wheels[0].m_CurrentAirPressure);
-
-                    }
-                }
+                throw new FormatException("Invalid license type");
             }
 
-            return successfulParse;
+            successfulParse = int.TryParse(i_DataMembers[10], out engineCapacity);
+            if (!successfulParse)
+            {
+                throw new FormatException("Invalid engine capacity");
+            }
+
+            return new FuelMotor(
+                (LicenseType)enumSelection,
+                engineCapacity,
+                fuelVehicle.m_FuelType,
+                fuelVehicle.m_CurrentFuelInLiters,
+                fuelVehicle.m_MaxFuelInLiters,
+                fuelVehicle.m_Model,
+                fuelVehicle.m_LicenseNumber,
+                fuelVehicle.m_RemainingEnergySourcePrecentage,
+                fuelVehicle.m_Wheels[0].m_Manufacturer,
+                fuelVehicle.m_Wheels[0].m_MaxAirPressure,
+                fuelVehicle.m_Wheels[0].m_CurrentAirPressure);
         }
     }
 }

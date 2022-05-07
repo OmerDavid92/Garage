@@ -158,31 +158,30 @@ namespace Ex03.GarageLogic
             return vehicle;
         }
 
-        public static bool TryParseVehicle(VehicleType i_VehicleType, List<string> i_DataMembers, out Vehicle o_Vehicle)
+        public static Vehicle ParseVehicle(VehicleType i_VehicleType, List<string> i_DataMembers)
         {
-            o_Vehicle = null;
-            bool successfulParse = true;
+            Vehicle vehicle = null;
 
             switch (i_VehicleType)
             {
                 case VehicleType.FuelCar:
-                    successfulParse = FuelCar.TryParse(i_DataMembers, out o_Vehicle);
+                    vehicle = FuelCar.Parse(i_DataMembers);
                     break;
                 case VehicleType.FuelMotor:
-                    successfulParse = FuelMotor.TryParse(i_DataMembers, out o_Vehicle);
+                    vehicle = FuelMotor.Parse(i_DataMembers);
                     break;
                 case VehicleType.ElectricCar:
-                    successfulParse = ElectricCar.TryParse(i_DataMembers, out o_Vehicle);
+                    vehicle = ElectricCar.Parse(i_DataMembers);
                     break;
                 case VehicleType.ElectricMotor:
-                    successfulParse = ElectricMotor.TryParse(i_DataMembers, out o_Vehicle);
+                    vehicle = ElectricMotor.Parse(i_DataMembers);
                     break;
                     //case VehicleType.Truck:
-                    //    successfulParse = Truck.TryParse(i_DataMembers, out o_Vehicle);
+                    //    vehicle = Truck.TryParse(i_DataMembers);
                     //    break;
             }
 
-            return successfulParse;
+            return vehicle;
         }
 
     }

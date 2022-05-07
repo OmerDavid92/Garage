@@ -1,4 +1,6 @@
-﻿namespace Ex03.ConsoleUI
+﻿using System.Runtime.InteropServices;
+
+namespace Ex03.ConsoleUI
 {
     using Ex03.GarageLogic;
     using System;
@@ -79,18 +81,31 @@
             return (Garage.VehicleType)enumSelection;
         }
 
-        private Vehicle getVehicle(List<string> i_VehicleDataMembers, Garage.VehicleType i_VehicleType)
+        private Vehicle getVehicle(string i_LicenseNumber, Garage.VehicleType i_VehicleType)
+        {
+            Vehicle vehicle = null;
+            List<string> vehicleDetailsFromUser = null;
+
+            try
+            {
+                vehicleDetailsFromUser = GetVehicleDetailsFromUser(i_LicenseNumber, i_VehicleType);
+                vehicle = Garage.ParseVehicle(i_VehicleType, vehicleDetailsFromUser);
+            }
+            catch (FormatException error)
+            {
+                Console.WriteLine(error.Message);
+            }
+
+            return vehicle;
+        }
+
+        private Vehicle getVehicleAndValidate(string i_LicenseNumber, Garage.VehicleType i_VehicleType)
         {
             Vehicle vehicle = null;
 
-            GetVehicleDetailsFromUser(i_VehicleDataMembers, i_VehicleType);
-            vehicle = CreateVehicle(i_VehicleType, i_VehicleDataMembers);
-
             while (vehicle == null)
             {
-                Console.WriteLine("Please enter valid vehicle details");
-                GetVehicleDetailsFromUser(i_VehicleDataMembers, i_VehicleType);
-                vehicle = CreateVehicle(i_VehicleType, i_VehicleDataMembers);
+                vehicle = getVehicle(i_LicenseNumber, i_VehicleType);
             }
 
             return vehicle;
@@ -101,16 +116,13 @@
             Vehicle vehicle = null;
             Garage.VehicleType vehicleType = 0;
             Customer customer = null;
-            List<string> dataMembersUserInput = new List<string>();
             string licenseNumber = GetLicenseNumber();
-
-            dataMembersUserInput.Add(licenseNumber);
 
             if (!m_Garage.CheckAndChangeVehicleStatusInGarage(licenseNumber))
             {
                 vehicleType = GetVehicleType();
                 customer = CreateCustomer();
-                customer.m_Vehicle = getVehicle(dataMembersUserInput, vehicleType);
+                customer.m_Vehicle = getVehicleAndValidate(licenseNumber, vehicleType);
                 m_Garage.m_GarageCustomers.Add(customer);
             }
             else
@@ -283,11 +295,11 @@
             }
             catch (ValueOutOfRangeException error)
             {
-                Console.WriteLine(error.Message());
+                Console.WriteLine(error.Message);
             }
-            catch (FuelTypeException error)
+            catch (ArgumentException error)
             {
-                Console.WriteLine(error.Message());
+                Console.WriteLine(error.Message);
             }
         }
 
@@ -313,7 +325,7 @@
             } 
             catch (ValueOutOfRangeException error)
             {
-                Console.WriteLine(error.Message());
+                Console.WriteLine(error.Message);
             }
         }
 
@@ -321,11 +333,18 @@
         {
             string licenseNumber = GetLicenseNumber();
             Vehicle vehicle = m_Garage.GetVehicleByLisenceNumber(licenseNumber);
-            List<string> vehicleProperties = vehicle.GetVehicleProperties();
-            
-            foreach (string property in vehicleProperties)
+            if (vehicle != null)
             {
-                Console.WriteLine(property);
+                List<string> vehicleProperties = vehicle.GetVehicleProperties();
+
+                foreach (string property in vehicleProperties)
+                {
+                    Console.WriteLine(property);
+                }
+            }
+            else
+            {
+                Console.WriteLine("License number not found");
             }
         }
 
@@ -390,10 +409,12 @@
             return new Customer(ownerName, phoneNumber);
         }
 
-        public void GetVehicleDetailsFromUser(List<string> i_UserInputs, Garage.VehicleType i_VehicleType)
+        public List<string> GetVehicleDetailsFromUser(string i_LicenseNumber, Garage.VehicleType i_VehicleType)
         {
-            List<string> dataMembers = Garage.GetChosenVehicleTypeDataMembers(i_VehicleType);
+            List<string> dataMembers = null;
+            List<string> vehicleDetailsFromUser = new List<string>();
 
+            dataMembers = Garage.GetChosenVehicleTypeDataMembers(i_VehicleType);
             Console.WriteLine("--- Add Vehicle Menu ---");
 
             foreach (string member in dataMembers)
@@ -401,20 +422,15 @@
                 if (!member.Equals("License Number"))
                 {
                     Console.WriteLine("Please enter {0}:", member);
-                    i_UserInputs.Add(Console.ReadLine());
+                    vehicleDetailsFromUser.Add(Console.ReadLine());
+                }
+                else
+                {
+                    vehicleDetailsFromUser.Add(i_LicenseNumber);
                 }
             }
+
+            return vehicleDetailsFromUser;
         }
-
-        public Vehicle CreateVehicle(Garage.VehicleType i_VehicleType, List<string> i_VehicleUserInput)
-        {
-            Vehicle newVehicle = null;
-            bool isParsed = false;
-
-            Garage.TryParseVehicle(i_VehicleType, i_VehicleUserInput, out newVehicle);
-            
-            return newVehicle;
-        }
-
     }
 }

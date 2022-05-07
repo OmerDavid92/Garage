@@ -20,7 +20,7 @@ namespace Ex03.GarageLogic
         public float m_CurrentFuelInLiters { get; private set; }
         public float m_MaxFuelInLiters { get; }
 
-        public static List<string> m_DataMembers = new List<string> { "Fuel Type: 0 - Soler/1 - Octan95/2 - Octan96/3 - Octan98", "Current Fuel In Liters", "Max Fuel In Liters" };
+        public static List<string> m_DataMembers = new List<string> { "Fuel Type: 0 - Soler / 1 - Octan95 / 2 - Octan96 / 3 - Octan98", "Current Fuel In Liters", "Max Fuel In Liters" };
         public FuelVehicle(
             FuelType i_FuelType,
             float i_CurrentFuelInLiters,
@@ -32,13 +32,14 @@ namespace Ex03.GarageLogic
             float i_WheelMaxAirPressure,
             float i_CurrentMaxAirPressure,
             int i_NumOfWheels)
-            : base(i_Model,
+            : base(
+                i_Model,
                 i_LisenceNumber,
                 i_RemainingEnergySourcePrecentage,
-                  i_WheelManufacturer,
-                  i_WheelMaxAirPressure,
-                  i_CurrentMaxAirPressure,
-                  i_NumOfWheels)
+                i_WheelManufacturer,
+                i_WheelMaxAirPressure,
+                i_CurrentMaxAirPressure,
+                i_NumOfWheels)
         {
             m_FuelType = i_FuelType;
             m_CurrentFuelInLiters = i_CurrentFuelInLiters;
@@ -47,7 +48,7 @@ namespace Ex03.GarageLogic
 
         public static List<string> GetDataMembers()
         {
-            List<string> newList = Vehicle.GetDataMembers();
+            List<string> newList = new List<string>(Vehicle.GetDataMembers());
             
             newList.AddRange(m_DataMembers);
 
@@ -58,7 +59,7 @@ namespace Ex03.GarageLogic
         {
             if (i_FuelType != m_FuelType)
             {
-                throw new FuelTypeException(m_FuelType, i_FuelType);
+                throw new ArgumentException($"Fuel Type Exception: The actual FuelType is: {m_FuelType}, But the input was {i_FuelType}");
             }
             if ((i_AmountToFuelInLiters + m_CurrentFuelInLiters) > m_MaxFuelInLiters)
             {
@@ -80,45 +81,45 @@ namespace Ex03.GarageLogic
             return vehicleProperties;
         }
 
-        public static bool TryParse(List<string> i_DataMembers, out FuelVehicle o_FuelVehicle)
+        public static FuelVehicle Parse(List<string> i_DataMembers)
         {
             bool successfulParse = true;
-            Vehicle o_Vehicle = null;
-            o_FuelVehicle = null;
+            Vehicle vehicle = null;
             int enumSelection = 0;
             int fuelTypeEnumMaxValue = (int)Enum.GetValues(typeof(FuelType)).Cast<FuelType>().Max();
             float currentFuelInLiters = 0;
             float maxFuelInLiters = 0;
 
-            successfulParse = Vehicle.TryParse(i_DataMembers.GetRange(0, 6), out o_Vehicle);
-            if (successfulParse)
+            vehicle = Vehicle.Parse(i_DataMembers.GetRange(0, 6));
+            successfulParse = int.TryParse(i_DataMembers[6], out enumSelection);
+            if (!successfulParse || fuelTypeEnumMaxValue < enumSelection || enumSelection < 0)
             {
-                successfulParse = int.TryParse(i_DataMembers[6], out enumSelection);
-                if (fuelTypeEnumMaxValue > enumSelection && enumSelection > 0 && successfulParse)
-                {
-                    successfulParse = float.TryParse(i_DataMembers[7], out currentFuelInLiters);
-                    if (successfulParse)
-                    {
-                        successfulParse = float.TryParse(i_DataMembers[8], out maxFuelInLiters);
-                        if (successfulParse)
-                        {
-                            o_FuelVehicle = new FuelVehicle(
-                                (FuelType)enumSelection,
-                                currentFuelInLiters,
-                                maxFuelInLiters,
-                                o_Vehicle.m_Model,
-                                o_Vehicle.m_LicenseNumber,
-                                o_Vehicle.m_RemainingEnergySourcePrecentage,
-                                o_Vehicle.m_Wheels[0].m_Manufacturer,
-                                o_Vehicle.m_Wheels[0].m_MaxAirPressure,
-                                o_Vehicle.m_Wheels[0].m_CurrentAirPressure,
-                                1);
-                        }
-                    }
-                }
+                throw new FormatException("Invalid fuel type");
             }
 
-            return successfulParse;
+            successfulParse = float.TryParse(i_DataMembers[7], out currentFuelInLiters);
+            if (!successfulParse)
+            {
+                throw new FormatException("Invalid current fuel amount");
+            }
+
+            successfulParse = float.TryParse(i_DataMembers[8], out maxFuelInLiters);
+            if (!successfulParse)
+            {
+                throw new FormatException("Invalid max fuel amount");
+            }
+
+            return new FuelVehicle(
+                (FuelType)enumSelection,
+                currentFuelInLiters,
+                maxFuelInLiters,
+                vehicle.m_Model,
+                vehicle.m_LicenseNumber,
+                vehicle.m_RemainingEnergySourcePrecentage,
+                vehicle.m_Wheels[0].m_Manufacturer,
+                vehicle.m_Wheels[0].m_MaxAirPressure,
+                vehicle.m_Wheels[0].m_CurrentAirPressure,
+                1);
         }
     }
 }

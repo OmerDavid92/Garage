@@ -65,38 +65,36 @@ namespace Ex03.GarageLogic
 
             return vehicleProperties;
         }
-        public static bool TryParse(List<string> i_DataMembers, out ElectricVehicle o_ElectricVehicle)
+        public static ElectricVehicle Parse(List<string> i_DataMembers)
         {
             bool successfulParse = true;
-            Vehicle o_Vehicle = null;
-            o_ElectricVehicle = null;
+            Vehicle vehicle = null;
             float m_BatteryHoursLeft = 0;
             float m_BatteryMaxHours = 0;
 
-            successfulParse = Vehicle.TryParse(i_DataMembers.GetRange(0, 6), out o_Vehicle);
-            if (successfulParse)
+            vehicle = Vehicle.Parse(i_DataMembers.GetRange(0, 6));
+            successfulParse = float.TryParse(i_DataMembers[6], out m_BatteryMaxHours);
+            if (!successfulParse)
             {
-                successfulParse = float.TryParse(i_DataMembers[6], out m_BatteryMaxHours);
-                if (successfulParse)
-                {
-                    successfulParse = float.TryParse(i_DataMembers[7], out m_BatteryHoursLeft);
-                    if (successfulParse)
-                    {
-                        o_ElectricVehicle = new ElectricVehicle(
-                            m_BatteryMaxHours,
-                            m_BatteryHoursLeft,
-                            o_Vehicle.m_Model,
-                            o_Vehicle.m_LicenseNumber,
-                            o_Vehicle.m_RemainingEnergySourcePrecentage,
-                            o_Vehicle.m_Wheels[0].m_Manufacturer,
-                            o_Vehicle.m_Wheels[0].m_MaxAirPressure,
-                            o_Vehicle.m_Wheels[0].m_CurrentAirPressure,
-                            1);
-                    }
-                }
+                throw new FormatException("Invalid battery max hours");
             }
 
-            return successfulParse;
+            successfulParse = float.TryParse(i_DataMembers[7], out m_BatteryHoursLeft);
+            if (!successfulParse)
+            {
+                throw new FormatException("Invalid battery hours left");
+            }
+
+            return new ElectricVehicle(
+                m_BatteryMaxHours,
+                m_BatteryHoursLeft,
+                vehicle.m_Model,
+                vehicle.m_LicenseNumber,
+                vehicle.m_RemainingEnergySourcePrecentage,
+                vehicle.m_Wheels[0].m_Manufacturer,
+                vehicle.m_Wheels[0].m_MaxAirPressure,
+                vehicle.m_Wheels[0].m_CurrentAirPressure,
+                1);
         }
     }
 }

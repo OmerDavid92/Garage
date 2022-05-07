@@ -52,7 +52,7 @@ namespace Ex03.GarageLogic
 
         public static List<string> GetDataMembers()
         {
-            List<string> newList = FuelVehicle.GetDataMembers();
+            List<string> newList = new List<string>(FuelVehicle.GetDataMembers());
             
             newList.AddRange(m_DataMembers);
 
@@ -70,42 +70,39 @@ namespace Ex03.GarageLogic
             return vehicleProperties;
         }
 
-        public static bool TryParse(List<string> i_DataMembers, out Vehicle o_FuelCarVehicle)
+        public static FuelCar Parse(List<string> i_DataMembers)
         {
             bool successfulParse = true;
-            FuelVehicle o_FuelVehicle = null;
-            o_FuelCarVehicle = null;
+            FuelVehicle fuelVehicle = null;
             int enumSelection = 0;
             int CarColorEnumMaxValue = (int)Enum.GetValues(typeof(CarColor)).Cast<CarColor>().Max();
             float cargoVolume = 0;
 
-            successfulParse = FuelVehicle.TryParse(i_DataMembers.GetRange(0, 9), out o_FuelVehicle);
-            if (successfulParse)
+            fuelVehicle = FuelVehicle.Parse(i_DataMembers.GetRange(0, 9));
+            successfulParse = int.TryParse(i_DataMembers[9], out enumSelection);
+            if (!successfulParse || CarColorEnumMaxValue < enumSelection || enumSelection < 0)
             {
-                successfulParse = int.TryParse(i_DataMembers[9], out enumSelection);
-                if (CarColorEnumMaxValue > enumSelection && enumSelection > 0 && successfulParse)
-                {
-                    successfulParse = float.TryParse(i_DataMembers[10], out cargoVolume);
-                    if (successfulParse)
-                    {
-                        o_FuelCarVehicle = new FuelCar(
-                            (CarColor)enumSelection,
-                            cargoVolume,
-                            o_FuelVehicle.m_FuelType,
-                            o_FuelVehicle.m_CurrentFuelInLiters,
-                            o_FuelVehicle.m_MaxFuelInLiters,
-                            o_FuelVehicle.m_Model,
-                            o_FuelVehicle.m_LicenseNumber,
-                            o_FuelVehicle.m_RemainingEnergySourcePrecentage,
-                            o_FuelVehicle.m_Wheels[0].m_Manufacturer,
-                            o_FuelVehicle.m_Wheels[0].m_MaxAirPressure,
-                            o_FuelVehicle.m_Wheels[0].m_CurrentAirPressure);
-                        
-                    }
-                }
+                throw new FormatException("Invalid car color");
             }
 
-            return successfulParse;
+            successfulParse = float.TryParse(i_DataMembers[10], out cargoVolume);
+            if (!successfulParse)
+            {
+                throw new FormatException("Invalid cargo volume");
+            }
+
+            return new FuelCar(
+                (CarColor)enumSelection,
+                cargoVolume,
+                fuelVehicle.m_FuelType,
+                fuelVehicle.m_CurrentFuelInLiters,
+                fuelVehicle.m_MaxFuelInLiters,
+                fuelVehicle.m_Model,
+                fuelVehicle.m_LicenseNumber,
+                fuelVehicle.m_RemainingEnergySourcePrecentage,
+                fuelVehicle.m_Wheels[0].m_Manufacturer,
+                fuelVehicle.m_Wheels[0].m_MaxAirPressure,
+                fuelVehicle.m_Wheels[0].m_CurrentAirPressure);
         }
     }
 }
