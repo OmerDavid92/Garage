@@ -58,11 +58,11 @@ namespace Ex03.GarageLogic
         {
             if (i_FuelType != m_FuelType)
             {
-                //EXCEPTION
+                throw new FuelTypeException(m_FuelType, i_FuelType);
             }
             if ((i_AmountToFuelInLiters + m_CurrentFuelInLiters) > m_MaxFuelInLiters)
             {
-                //EXCEPTION
+                throw new ValueOutOfRangeException(m_MaxFuelInLiters, 0); 
             }
 
             m_CurrentFuelInLiters += i_AmountToFuelInLiters;

@@ -79,7 +79,6 @@
             return (Garage.VehicleType)enumSelection;
         }
 
-        ///CHECK WTF HAPPANNING WITH EXCEPTIONS
         private Vehicle getVehicle(List<string> i_VehicleDataMembers, Garage.VehicleType i_VehicleType)
         {
             Vehicle vehicle = null;
@@ -268,17 +267,27 @@
             string licenseNumber = GetLicenseNumber();
 
             currentVehicle = m_Garage.GetVehicleByLisenceNumber(licenseNumber);
-
-            if (currentVehicle is FuelVehicle)
+            try
             {
-                fuelType = GetFuelType();
-                amountToFuel = GetAmountToFuel();
-                m_Garage.RefuelVehicle(licenseNumber, fuelType, amountToFuel);
-                Console.WriteLine("Vehicle Refueled");
+                if (currentVehicle is FuelVehicle)
+                {
+                    fuelType = GetFuelType();
+                    amountToFuel = GetAmountToFuel();
+                    m_Garage.RefuelVehicle(licenseNumber, fuelType, amountToFuel);
+                    Console.WriteLine("Vehicle Refueled");
+                }
+                else
+                {
+                    Console.WriteLine("Can't refuel an electric vehicle");
+                }
             }
-            else
+            catch (ValueOutOfRangeException error)
             {
-                Console.WriteLine("Can't refuel an electric vehicle");
+                Console.WriteLine(error.Message());
+            }
+            catch (FuelTypeException error)
+            {
+                Console.WriteLine(error.Message());
             }
         }
 
@@ -289,16 +298,22 @@
             string licenseNumber = GetLicenseNumber();
 
             currentVehicle = m_Garage.GetVehicleByLisenceNumber(licenseNumber);
-
-            if (currentVehicle is ElectricCar)
+            try
             {
-                amountToCharge = GetAmountToCharge();
-                m_Garage.RechargeVehicle(licenseNumber, amountToCharge);
-                Console.WriteLine("Vehicle Recharged");
-            }
-            else
+                if (currentVehicle is ElectricCar)
+                {
+                    amountToCharge = GetAmountToCharge();
+                    m_Garage.RechargeVehicle(licenseNumber, amountToCharge);
+                    Console.WriteLine("Vehicle Recharged");
+                }
+                else
+                {
+                    Console.WriteLine("Can't charge a fuel vehicle");
+                }
+            } 
+            catch (ValueOutOfRangeException error)
             {
-                Console.WriteLine("Can't charge a fuel vehicle");
+                Console.WriteLine(error.Message());
             }
         }
 
@@ -396,12 +411,8 @@
             Vehicle newVehicle = null;
             bool isParsed = false;
 
-            isParsed = Garage.TryParseVehicle(i_VehicleType, i_VehicleUserInput, out newVehicle);
-            if (!isParsed)
-            {
-                //Menu
-            }
-
+            Garage.TryParseVehicle(i_VehicleType, i_VehicleUserInput, out newVehicle);
+            
             return newVehicle;
         }
 

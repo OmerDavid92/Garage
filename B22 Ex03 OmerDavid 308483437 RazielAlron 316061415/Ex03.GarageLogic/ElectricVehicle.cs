@@ -49,7 +49,7 @@ namespace Ex03.GarageLogic
         {
             if ((i_TimeToCharge + m_BatteryHoursLeft) > m_BatteryMaxHours)
             {
-                //EXCEPTION
+                throw new ValueOutOfRangeException(m_BatteryMaxHours, 0);
             }
 
             m_BatteryHoursLeft += i_TimeToCharge;
