@@ -1,27 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Ex03.GarageLogic
+﻿namespace Ex03.GarageLogic
 {
-    class FuelMotor : FuelVehicle
-    {
-        public enum LicenseType
-        {
-            A,
-            A1,
-            B1,
-            BB
-        }
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
 
-        public LicenseType m_LicenseType { get; }
-        public int m_EngineCapacity { get; }
+    public class FuelMotor : FuelVehicle
+    {
+        public static List<string> m_DataMembers = new List<string> { "LicenseType: A/A1/B1/BB", "License Type", "Engine Capacity" };
 
         private const int m_NumOfWheels = 2;
-
-        public static List<string> m_DataMembers = new List<string> { "LicenseType: A/A1/B1/BB", "License Type", "Engine Capacity" };
 
         public FuelMotor(
             LicenseType i_LicenseType,
@@ -49,6 +36,18 @@ namespace Ex03.GarageLogic
             m_EngineCapacity = i_EngineCapacity;
         }
 
+        public enum LicenseType
+        {
+            A,
+            A1,
+            B1,
+            BB
+        }
+
+        public LicenseType m_LicenseType { get; }
+
+        public int m_EngineCapacity { get; }
+
         public static List<string> GetDataMembers()
         {
             List<string> newList = FuelVehicle.GetDataMembers();
@@ -58,28 +57,17 @@ namespace Ex03.GarageLogic
             return newList;
         }
 
-        public override List<string> GetVehicleProperties()
-        {
-            List<string> vehicleProperties = new List<string>();
-
-            vehicleProperties.AddRange(base.GetVehicleProperties());
-            vehicleProperties.Add($"License Type: {m_LicenseType}");
-            vehicleProperties.Add($"Engine Capacity: {m_EngineCapacity}");
-
-            return vehicleProperties;
-        }
-
         public static FuelMotor Parse(List<string> i_DataMembers)
         {
             bool successfulParse = true;
             FuelVehicle fuelVehicle = null;
             int enumSelection = 0;
-            int CarColorEnumMaxValue = (int)Enum.GetValues(typeof(LicenseType)).Cast<LicenseType>().Max();
+            int carColorEnumMaxValue = (int)Enum.GetValues(typeof(LicenseType)).Cast<LicenseType>().Max();
             int engineCapacity = 0;
 
             fuelVehicle = FuelVehicle.Parse(i_DataMembers.GetRange(0, 8));
             successfulParse = int.TryParse(i_DataMembers[8], out enumSelection);
-            if (!successfulParse || CarColorEnumMaxValue < enumSelection || enumSelection < 0)
+            if (!successfulParse || carColorEnumMaxValue < enumSelection || enumSelection < 0)
             {
                 throw new FormatException("Invalid license type");
             }
@@ -101,6 +89,17 @@ namespace Ex03.GarageLogic
                 fuelVehicle.m_Wheels[0].m_Manufacturer,
                 fuelVehicle.m_Wheels[0].m_MaxAirPressure,
                 fuelVehicle.m_Wheels[0].m_CurrentAirPressure);
+        }
+
+        public override List<string> GetVehicleProperties()
+        {
+            List<string> vehicleProperties = new List<string>();
+
+            vehicleProperties.AddRange(base.GetVehicleProperties());
+            vehicleProperties.Add($"License Type: {m_LicenseType}");
+            vehicleProperties.Add($"Engine Capacity: {m_EngineCapacity}");
+
+            return vehicleProperties;
         }
     }
 }

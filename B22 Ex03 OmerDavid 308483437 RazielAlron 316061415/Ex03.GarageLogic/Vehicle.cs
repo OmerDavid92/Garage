@@ -1,17 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Ex03.GarageLogic
+﻿namespace Ex03.GarageLogic
 {
+    using System.Collections.Generic;
+
     public class Vehicle
     {
-        public string m_Model { get; }
-        public string m_LicenseNumber { get; }
-        public float m_RemainingEnergySourcePrecentage { get; private set; }
-        public List<Wheel> m_Wheels { get; }
         public static List<string> m_DataMembers = new List<string> { "License Number", "Model" };
 
         public Vehicle(
@@ -27,24 +19,49 @@ namespace Ex03.GarageLogic
             Wheel wheel = new Wheel(i_WheelManufacturer, i_WheelMaxAirPressure, i_CurrentMaxAirPressure);
             m_Wheels = new List<Wheel>();
 
-            for(int i = 0; i < i_NumOfWheels; i++)
+            for (int i = 0; i < i_NumOfWheels; i++)
             {
                 m_Wheels.Add(wheel);
             }
         }
 
-        public void UpdateRemainingEnergySourcePrecentage(float i_CurrentEnergySource, float i_MaxEnergySource)
-        {
-            m_RemainingEnergySourcePrecentage = i_CurrentEnergySource / i_MaxEnergySource;
-        }
+        public string m_Model { get; }
+
+        public string m_LicenseNumber { get; }
+
+        public float m_RemainingEnergySourcePrecentage { get; private set; }
+
+        public List<Wheel> m_Wheels { get; }
 
         public static List<string> GetDataMembers()
         {
             List<string> newList = new List<string>(m_DataMembers);
-            
+
             newList.AddRange(Wheel.GetDataMembers());
 
             return newList;
+        }
+
+        public static Vehicle Parse(List<string> i_DataMembers)
+        {
+            Wheel wheel = null;
+            string lisenceNumber = i_DataMembers[0];
+            string model = i_DataMembers[1];
+
+            wheel = Wheel.Parse(i_DataMembers.GetRange(2, 3));
+
+            return new Vehicle(
+                model,
+                lisenceNumber,
+                wheel.m_Manufacturer,
+                wheel.m_MaxAirPressure,
+                wheel.m_CurrentAirPressure,
+                1);
+        }
+
+        public void UpdateRemainingEnergySourcePrecentage(float i_CurrentEnergySource, float i_MaxEnergySource)
+        {
+            m_RemainingEnergySourcePrecentage = i_CurrentEnergySource / i_MaxEnergySource;
         }
 
         public void inflateMaxWheels()
@@ -66,24 +83,6 @@ namespace Ex03.GarageLogic
             vehicleProperties.Add($"Number Of Wheels: {m_Wheels.Count}");
 
             return vehicleProperties;
-        }
-
-        public static Vehicle Parse(List<string> i_DataMembers)
-        {
-            Wheel wheel = null;
-            string lisenceNumber = i_DataMembers[0];
-            string model = i_DataMembers[1];
-
-            wheel = Wheel.Parse(i_DataMembers.GetRange(2, 3));
-
-            return new Vehicle(
-                model,
-                lisenceNumber,
-                wheel.m_Manufacturer,
-                wheel.m_MaxAirPressure,
-                wheel.m_CurrentAirPressure,
-                1);
-        }
-        
+        }      
     }
 }

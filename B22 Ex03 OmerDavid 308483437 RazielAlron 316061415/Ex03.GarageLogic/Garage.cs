@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Ex03.GarageLogic
+﻿namespace Ex03.GarageLogic
 {
+    using System.Collections.Generic;
+
     public class Garage
     {
         public enum VehicleType
@@ -19,7 +15,7 @@ namespace Ex03.GarageLogic
 
         public List<Customer> m_GarageCustomers { get; } = new List<Customer>();
 
-        public static List<string> GetChosenVehicleTypeDataMembers (VehicleType i_VehicleType)
+        public static List<string> GetChosenVehicleTypeDataMembers(VehicleType i_VehicleType)
         {
             List<string> dataMembers = null;
 
@@ -45,21 +41,33 @@ namespace Ex03.GarageLogic
             return dataMembers;
         }
 
-        private bool isVehicleExistInGarage(string i_LisenceNumber)
+        public static Vehicle ParseVehicle(VehicleType i_VehicleType, List<string> i_DataMembers)
         {
-            bool isVehicleExistInGarage = false;
-            foreach (Customer costumer in m_GarageCustomers)
+            Vehicle vehicle = null;
+
+            switch (i_VehicleType)
             {
-                if (i_LisenceNumber.Equals(costumer.m_Vehicle.m_LicenseNumber))
-                {
-                    isVehicleExistInGarage = true;
-                }
+                case VehicleType.FuelCar:
+                    vehicle = FuelCar.Parse(i_DataMembers);
+                    break;
+                case VehicleType.FuelMotor:
+                    vehicle = FuelMotor.Parse(i_DataMembers);
+                    break;
+                case VehicleType.ElectricCar:
+                    vehicle = ElectricCar.Parse(i_DataMembers);
+                    break;
+                case VehicleType.ElectricMotor:
+                    vehicle = ElectricMotor.Parse(i_DataMembers);
+                    break;
+                case VehicleType.Truck:
+                    vehicle = Truck.Parse(i_DataMembers);
+                    break;
             }
 
-            return isVehicleExistInGarage;
+            return vehicle;
         }
 
-        public void ChangeVehicleStatusInGarage (string i_LisenceNumber, Customer.CarStatus i_CarStatus)
+        public void ChangeVehicleStatusInGarage(string i_LisenceNumber, Customer.CarStatus i_CarStatus)
         {
             foreach (Customer costumer in m_GarageCustomers)
             {
@@ -158,31 +166,18 @@ namespace Ex03.GarageLogic
             return vehicle;
         }
 
-        public static Vehicle ParseVehicle(VehicleType i_VehicleType, List<string> i_DataMembers)
+        private bool isVehicleExistInGarage(string i_LisenceNumber)
         {
-            Vehicle vehicle = null;
-
-            switch (i_VehicleType)
+            bool isVehicleExistInGarage = false;
+            foreach (Customer costumer in m_GarageCustomers)
             {
-                case VehicleType.FuelCar:
-                    vehicle = FuelCar.Parse(i_DataMembers);
-                    break;
-                case VehicleType.FuelMotor:
-                    vehicle = FuelMotor.Parse(i_DataMembers);
-                    break;
-                case VehicleType.ElectricCar:
-                    vehicle = ElectricCar.Parse(i_DataMembers);
-                    break;
-                case VehicleType.ElectricMotor:
-                    vehicle = ElectricMotor.Parse(i_DataMembers);
-                    break;
-                case VehicleType.Truck:
-                    vehicle = Truck.Parse(i_DataMembers);
-                    break;
+                if (i_LisenceNumber.Equals(costumer.m_Vehicle.m_LicenseNumber))
+                {
+                    isVehicleExistInGarage = true;
+                }
             }
 
-            return vehicle;
+            return isVehicleExistInGarage;
         }
-
     }
 }

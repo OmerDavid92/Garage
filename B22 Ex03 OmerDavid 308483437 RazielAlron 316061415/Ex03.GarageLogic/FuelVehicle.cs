@@ -1,26 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Ex03.GarageLogic
+﻿namespace Ex03.GarageLogic
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
     public class FuelVehicle : Vehicle
     {
-        public enum FuelType
-        {
-            Soler,
-            Octan95,
-            Octan96,
-            Octan98
-        }
-
-        public FuelType m_FuelType { get; }
-        public float m_CurrentFuelInLiters { get; private set; }
-        public float m_MaxFuelInLiters { get; }
-
         public static List<string> m_DataMembers = new List<string> { "Fuel Type: 0 - Soler / 1 - Octan95 / 2 - Octan96 / 3 - Octan98", "Current Fuel In Liters", "Max Fuel In Liters" };
+
         public FuelVehicle(
             FuelType i_FuelType,
             float i_CurrentFuelInLiters,
@@ -45,6 +32,20 @@ namespace Ex03.GarageLogic
             UpdateRemainingEnergySourcePrecentage(i_CurrentFuelInLiters, i_MaxFuelInLiters);
         }
 
+        public enum FuelType
+        {
+            Soler,
+            Octan95,
+            Octan96,
+            Octan98
+        }
+
+        public FuelType m_FuelType { get; }
+
+        public float m_CurrentFuelInLiters { get; private set; }
+
+        public float m_MaxFuelInLiters { get; }
+
         public static List<string> GetDataMembers()
         {
             List<string> newList = new List<string>(Vehicle.GetDataMembers());
@@ -52,33 +53,6 @@ namespace Ex03.GarageLogic
             newList.AddRange(m_DataMembers);
 
             return newList;
-        }
-
-        public void RefuelByAmount(FuelType i_FuelType, float i_AmountToFuelInLiters)
-        {
-            if (i_FuelType != m_FuelType)
-            {
-                throw new ArgumentException($"Fuel Type Exception: The actual FuelType is: {m_FuelType}, But the input was {i_FuelType}");
-            }
-            if ((i_AmountToFuelInLiters + m_CurrentFuelInLiters) > m_MaxFuelInLiters)
-            {
-                throw new ValueOutOfRangeException(m_MaxFuelInLiters, 0); 
-            }
-
-            m_CurrentFuelInLiters += i_AmountToFuelInLiters;
-            UpdateRemainingEnergySourcePrecentage(m_CurrentFuelInLiters, m_MaxFuelInLiters);
-        }
-
-        public override List<string> GetVehicleProperties()
-        {
-            List<string> vehicleProperties = new List<string>();
-
-            vehicleProperties.AddRange(base.GetVehicleProperties());
-            vehicleProperties.Add($"Fuel Type: {m_FuelType}");
-            vehicleProperties.Add($"Current Fuel In Liters: {m_CurrentFuelInLiters}");
-            vehicleProperties.Add($"Max Fuel In Liters: {m_MaxFuelInLiters}");
-
-            return vehicleProperties;
         }
 
         public static FuelVehicle Parse(List<string> i_DataMembers)
@@ -119,6 +93,34 @@ namespace Ex03.GarageLogic
                 vehicle.m_Wheels[0].m_MaxAirPressure,
                 vehicle.m_Wheels[0].m_CurrentAirPressure,
                 1);
+        }
+
+        public void RefuelByAmount(FuelType i_FuelType, float i_AmountToFuelInLiters)
+        {
+            if (i_FuelType != m_FuelType)
+            {
+                throw new ArgumentException($"Fuel Type Exception: The actual FuelType is: {m_FuelType}, But the input was {i_FuelType}");
+            }
+
+            if ((i_AmountToFuelInLiters + m_CurrentFuelInLiters) > m_MaxFuelInLiters)
+            {
+                throw new ValueOutOfRangeException(m_MaxFuelInLiters, 0); 
+            }
+
+            m_CurrentFuelInLiters += i_AmountToFuelInLiters;
+            UpdateRemainingEnergySourcePrecentage(m_CurrentFuelInLiters, m_MaxFuelInLiters);
+        }
+
+        public override List<string> GetVehicleProperties()
+        {
+            List<string> vehicleProperties = new List<string>();
+
+            vehicleProperties.AddRange(base.GetVehicleProperties());
+            vehicleProperties.Add($"Fuel Type: {m_FuelType}");
+            vehicleProperties.Add($"Current Fuel In Liters: {m_CurrentFuelInLiters}");
+            vehicleProperties.Add($"Max Fuel In Liters: {m_MaxFuelInLiters}");
+
+            return vehicleProperties;
         }
     }
 }

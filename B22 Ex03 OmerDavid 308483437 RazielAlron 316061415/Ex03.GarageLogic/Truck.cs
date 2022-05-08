@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Ex03.GarageLogic
+﻿namespace Ex03.GarageLogic
 {
+    using System;
+    using System.Collections.Generic;
+
     public class Truck : FuelVehicle
     {
-        public bool m_IsDrivingRefrigeratedContents { get; }
-        public float m_CargoVolume { get; }
+        public static List<string> m_DataMembers = new List<string> { "Is Driving Refrigerated Contents: 0 - False / 1 - True", "Cargo Volume" };
 
         private const int m_NumOfWheels = 16;
-
-        public static List<string> m_DataMembers = new List<string> { "Is Driving Refrigerated Contents: 0 - False / 1 - True", "Cargo Volume" };
 
         public Truck(
             bool i_IsDrivingRefrigeratedContents,
@@ -26,7 +20,8 @@ namespace Ex03.GarageLogic
             string i_WheelManufacturer,
             float i_WheelMaxAirPressure,
             float i_CurrentMaxAirPressure)
-            : base(i_FuelType,
+            : base(
+                  i_FuelType,
                   i_CurrentFuelInLiters,
                   i_MaxFuelInLiters,
                   i_Model,
@@ -40,16 +35,10 @@ namespace Ex03.GarageLogic
             m_CargoVolume = i_CargoVolume;
         }
 
-        public override List<string> GetVehicleProperties()
-        {
-            List<string> vehicleProperties = new List<string>();
+        public bool m_IsDrivingRefrigeratedContents { get; }
 
-            vehicleProperties.AddRange(base.GetVehicleProperties());
-            vehicleProperties.Add($"Is Driving Refrigerated Contents: {m_IsDrivingRefrigeratedContents}");
-            vehicleProperties.Add($"Cargo Volume: {m_CargoVolume}");
+        public float m_CargoVolume { get; }
 
-            return vehicleProperties;
-        }
         public static List<string> GetDataMembers()
         {
             List<string> newList = new List<string>(FuelVehicle.GetDataMembers());
@@ -58,6 +47,7 @@ namespace Ex03.GarageLogic
 
             return newList;
         }
+
         public static Truck Parse(List<string> i_DataMembers)
         {
             bool successfulParse = true;
@@ -66,7 +56,7 @@ namespace Ex03.GarageLogic
             float cargoVolume = 0;
 
             fuelVehicle = FuelVehicle.Parse(i_DataMembers.GetRange(0, 8));
-            if(!(i_DataMembers[9].Equals("0") || i_DataMembers[8].Equals("1")))
+            if (!(i_DataMembers[9].Equals("0") || i_DataMembers[8].Equals("1")))
             {
                 throw new FormatException("Invalid Refrigerated Transformation");
             }
@@ -91,5 +81,15 @@ namespace Ex03.GarageLogic
                 fuelVehicle.m_Wheels[0].m_CurrentAirPressure);
         }
 
+        public override List<string> GetVehicleProperties()
+        {
+            List<string> vehicleProperties = new List<string>();
+
+            vehicleProperties.AddRange(base.GetVehicleProperties());
+            vehicleProperties.Add($"Is Driving Refrigerated Contents: {m_IsDrivingRefrigeratedContents}");
+            vehicleProperties.Add($"Cargo Volume: {m_CargoVolume}");
+
+            return vehicleProperties;
+        }
     }
 }
