@@ -27,7 +27,6 @@ namespace Ex03.GarageLogic
             float i_MaxFuelInLiters,
             string i_Model,
             string i_LisenceNumber,
-            float i_RemainingEnergySourcePrecentage,
             string i_WheelManufacturer,
             float i_WheelMaxAirPressure,
             float i_CurrentMaxAirPressure,
@@ -35,7 +34,6 @@ namespace Ex03.GarageLogic
             : base(
                 i_Model,
                 i_LisenceNumber,
-                i_RemainingEnergySourcePrecentage,
                 i_WheelManufacturer,
                 i_WheelMaxAirPressure,
                 i_CurrentMaxAirPressure,
@@ -44,6 +42,7 @@ namespace Ex03.GarageLogic
             m_FuelType = i_FuelType;
             m_CurrentFuelInLiters = i_CurrentFuelInLiters;
             m_MaxFuelInLiters = i_MaxFuelInLiters;
+            UpdateRemainingEnergySourcePrecentage(i_CurrentFuelInLiters, i_MaxFuelInLiters);
         }
 
         public static List<string> GetDataMembers()
@@ -67,6 +66,7 @@ namespace Ex03.GarageLogic
             }
 
             m_CurrentFuelInLiters += i_AmountToFuelInLiters;
+            UpdateRemainingEnergySourcePrecentage(m_CurrentFuelInLiters, m_MaxFuelInLiters);
         }
 
         public override List<string> GetVehicleProperties()
@@ -90,20 +90,20 @@ namespace Ex03.GarageLogic
             float currentFuelInLiters = 0;
             float maxFuelInLiters = 0;
 
-            vehicle = Vehicle.Parse(i_DataMembers.GetRange(0, 6));
-            successfulParse = int.TryParse(i_DataMembers[6], out enumSelection);
+            vehicle = Vehicle.Parse(i_DataMembers.GetRange(0, 5));
+            successfulParse = int.TryParse(i_DataMembers[5], out enumSelection);
             if (!successfulParse || fuelTypeEnumMaxValue < enumSelection || enumSelection < 0)
             {
                 throw new FormatException("Invalid fuel type");
             }
 
-            successfulParse = float.TryParse(i_DataMembers[7], out currentFuelInLiters);
+            successfulParse = float.TryParse(i_DataMembers[6], out currentFuelInLiters);
             if (!successfulParse)
             {
                 throw new FormatException("Invalid current fuel amount");
             }
 
-            successfulParse = float.TryParse(i_DataMembers[8], out maxFuelInLiters);
+            successfulParse = float.TryParse(i_DataMembers[7], out maxFuelInLiters);
             if (!successfulParse)
             {
                 throw new FormatException("Invalid max fuel amount");
@@ -115,7 +115,6 @@ namespace Ex03.GarageLogic
                 maxFuelInLiters,
                 vehicle.m_Model,
                 vehicle.m_LicenseNumber,
-                vehicle.m_RemainingEnergySourcePrecentage,
                 vehicle.m_Wheels[0].m_Manufacturer,
                 vehicle.m_Wheels[0].m_MaxAirPressure,
                 vehicle.m_Wheels[0].m_CurrentAirPressure,

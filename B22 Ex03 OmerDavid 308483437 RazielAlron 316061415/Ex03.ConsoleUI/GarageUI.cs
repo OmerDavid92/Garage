@@ -113,7 +113,6 @@ namespace Ex03.ConsoleUI
 
         public void AddVehicle()
         {
-            Vehicle vehicle = null;
             Garage.VehicleType vehicleType = 0;
             Customer customer = null;
             string licenseNumber = GetLicenseNumber();

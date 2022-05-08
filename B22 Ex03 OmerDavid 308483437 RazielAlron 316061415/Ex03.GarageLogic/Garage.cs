@@ -37,9 +37,9 @@ namespace Ex03.GarageLogic
                 case VehicleType.ElectricMotor:
                     dataMembers = ElectricMotor.GetDataMembers();
                     break;
-                //case VehicleType.Truck:
-                //    dataMembers = Truck.GetDataMembers();
-                //    break;
+                case VehicleType.Truck:
+                    dataMembers = Truck.GetDataMembers();
+                    break;
             }
 
             return dataMembers;
@@ -176,9 +176,9 @@ namespace Ex03.GarageLogic
                 case VehicleType.ElectricMotor:
                     vehicle = ElectricMotor.Parse(i_DataMembers);
                     break;
-                    //case VehicleType.Truck:
-                    //    vehicle = Truck.TryParse(i_DataMembers);
-                    //    break;
+                case VehicleType.Truck:
+                    vehicle = Truck.Parse(i_DataMembers);
+                    break;
             }
 
             return vehicle;

@@ -47,6 +47,7 @@
     <Compile Include="FuelMotor.cs" />
     <Compile Include="FuelVehicle.cs" />
     <Compile Include="Garage.cs" />
+    <Compile Include="Truck.cs" />
     <Compile Include="ValueOutOfRangeException.cs" />
     <Compile Include="Vehicle.cs" />
     <Compile Include="Wheel.cs" />

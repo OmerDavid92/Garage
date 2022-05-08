@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Ex03.GarageLogic
+﻿namespace Ex03.GarageLogic
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
     class FuelCar : FuelVehicle
     {
         public enum CarColor
@@ -16,22 +14,29 @@ namespace Ex03.GarageLogic
             Blue
         }
 
+        public enum NumOfDoors
+        {
+            Two = 2,
+            Three,
+            Four,
+            Five
+        }
+
         public CarColor m_CarColor { get; set; }
-        public float m_CargoVolume { get; }
+        public NumOfDoors m_NumOfDoors { get; }
 
         private const int m_NumOfWheels = 4;
 
-        public static List<string> m_DataMembers = new List<string> { "Car Color: 0 - Red / 1 - White / 2 - Green / 3 - Blue", "Cargo Volume" };
+        public static List<string> m_DataMembers = new List<string> { "Car Color: 0 - Red / 1 - White / 2 - Green / 3 - Blue", "Number Of Doors: 2 / 3 / 4 / 5" };
 
         public FuelCar(
             CarColor i_CarColor,
-            float i_CargoVolume,
+            NumOfDoors i_NumOfDoors,
             FuelType i_FuelType,
             float i_CurrentFuelInLiters,
             float i_MaxFuelInLiters,
             string i_Model,
             string i_LisenceNumber,
-            float i_RemainingEnergySourcePrecentage, 
             string i_WheelManufacturer,
             float i_WheelMaxAirPressure,
             float i_CurrentMaxAirPressure)
@@ -40,14 +45,13 @@ namespace Ex03.GarageLogic
                   i_MaxFuelInLiters,
                   i_Model,
                   i_LisenceNumber,
-                  i_RemainingEnergySourcePrecentage,
                   i_WheelManufacturer,
                   i_WheelMaxAirPressure,
                   i_CurrentMaxAirPressure,
                   m_NumOfWheels)
         {
             m_CarColor = i_CarColor;
-            m_CargoVolume = i_CargoVolume;
+            m_NumOfDoors = i_NumOfDoors;
         }
 
         public static List<string> GetDataMembers()
@@ -65,7 +69,7 @@ namespace Ex03.GarageLogic
 
             vehicleProperties.AddRange(base.GetVehicleProperties());
             vehicleProperties.Add($"Car Color: {m_CarColor}");
-            vehicleProperties.Add($"Cargo Volume: {m_CargoVolume}");
+            vehicleProperties.Add($"Number Of Doors: {m_NumOfDoors}");
 
             return vehicleProperties;
         }
@@ -74,32 +78,33 @@ namespace Ex03.GarageLogic
         {
             bool successfulParse = true;
             FuelVehicle fuelVehicle = null;
-            int enumSelection = 0;
+            int carColorEnumSelection = 0;
+            int NumOfDoorsEnumSelection = 0;
             int CarColorEnumMaxValue = (int)Enum.GetValues(typeof(CarColor)).Cast<CarColor>().Max();
-            float cargoVolume = 0;
+            int NumOfDoorsEnumMaxValue = (int)Enum.GetValues(typeof(NumOfDoors)).Cast<NumOfDoors>().Max();
+            int NumOfDoorsEnumMinValue = (int)Enum.GetValues(typeof(NumOfDoors)).Cast<NumOfDoors>().Min();
 
-            fuelVehicle = FuelVehicle.Parse(i_DataMembers.GetRange(0, 9));
-            successfulParse = int.TryParse(i_DataMembers[9], out enumSelection);
-            if (!successfulParse || CarColorEnumMaxValue < enumSelection || enumSelection < 0)
+            fuelVehicle = FuelVehicle.Parse(i_DataMembers.GetRange(0, 8));
+            successfulParse = int.TryParse(i_DataMembers[8], out carColorEnumSelection);
+            if (!successfulParse || CarColorEnumMaxValue < carColorEnumSelection || carColorEnumSelection < 0)
             {
                 throw new FormatException("Invalid car color");
             }
 
-            successfulParse = float.TryParse(i_DataMembers[10], out cargoVolume);
-            if (!successfulParse)
+            successfulParse = int.TryParse(i_DataMembers[9], out NumOfDoorsEnumSelection);
+            if (!successfulParse || NumOfDoorsEnumMaxValue < NumOfDoorsEnumSelection || NumOfDoorsEnumSelection < NumOfDoorsEnumMinValue)
             {
-                throw new FormatException("Invalid cargo volume");
+                throw new FormatException("Invalid Number Of Doors");
             }
 
             return new FuelCar(
-                (CarColor)enumSelection,
-                cargoVolume,
+                (CarColor)carColorEnumSelection,
+                (NumOfDoors)NumOfDoorsEnumSelection,
                 fuelVehicle.m_FuelType,
                 fuelVehicle.m_CurrentFuelInLiters,
                 fuelVehicle.m_MaxFuelInLiters,
                 fuelVehicle.m_Model,
                 fuelVehicle.m_LicenseNumber,
-                fuelVehicle.m_RemainingEnergySourcePrecentage,
                 fuelVehicle.m_Wheels[0].m_Manufacturer,
                 fuelVehicle.m_Wheels[0].m_MaxAirPressure,
                 fuelVehicle.m_Wheels[0].m_CurrentAirPressure);

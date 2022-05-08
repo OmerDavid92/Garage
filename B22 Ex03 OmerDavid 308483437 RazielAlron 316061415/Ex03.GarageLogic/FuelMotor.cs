@@ -31,7 +31,6 @@ namespace Ex03.GarageLogic
             float i_MaxFuelInLiters,
             string i_Model,
             string i_LisenceNumber,
-            float i_RemainingEnergySourcePrecentage,
             string i_WheelManufacturer,
             float i_WheelMaxAirPressure,
             float i_CurrentMaxAirPressure)
@@ -41,7 +40,6 @@ namespace Ex03.GarageLogic
                 i_MaxFuelInLiters,
                 i_Model,
                 i_LisenceNumber,
-                i_RemainingEnergySourcePrecentage,
                 i_WheelManufacturer,
                 i_WheelMaxAirPressure,
                 i_CurrentMaxAirPressure,
@@ -79,14 +77,14 @@ namespace Ex03.GarageLogic
             int CarColorEnumMaxValue = (int)Enum.GetValues(typeof(LicenseType)).Cast<LicenseType>().Max();
             int engineCapacity = 0;
 
-            fuelVehicle = FuelVehicle.Parse(i_DataMembers.GetRange(0, 9));
-            successfulParse = int.TryParse(i_DataMembers[9], out enumSelection);
+            fuelVehicle = FuelVehicle.Parse(i_DataMembers.GetRange(0, 8));
+            successfulParse = int.TryParse(i_DataMembers[8], out enumSelection);
             if (!successfulParse || CarColorEnumMaxValue < enumSelection || enumSelection < 0)
             {
                 throw new FormatException("Invalid license type");
             }
 
-            successfulParse = int.TryParse(i_DataMembers[10], out engineCapacity);
+            successfulParse = int.TryParse(i_DataMembers[9], out engineCapacity);
             if (!successfulParse)
             {
                 throw new FormatException("Invalid engine capacity");
@@ -100,7 +98,6 @@ namespace Ex03.GarageLogic
                 fuelVehicle.m_MaxFuelInLiters,
                 fuelVehicle.m_Model,
                 fuelVehicle.m_LicenseNumber,
-                fuelVehicle.m_RemainingEnergySourcePrecentage,
                 fuelVehicle.m_Wheels[0].m_Manufacturer,
                 fuelVehicle.m_Wheels[0].m_MaxAirPressure,
                 fuelVehicle.m_Wheels[0].m_CurrentAirPressure);
